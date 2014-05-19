@@ -68,7 +68,7 @@ public class TestSendExperiment extends Thread {
 
 		token = logindummy.login();
 
-		String url = "http://scratchy.cs.umu.se:" + SystemTesting.PORT
+		String url = SystemTesting.server + SystemTesting.PORT
 				+ "/experiment";
 
 		URL obj = new URL(url);

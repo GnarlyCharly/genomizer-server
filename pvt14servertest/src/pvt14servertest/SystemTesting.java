@@ -18,6 +18,8 @@ public class SystemTesting {
 	public static Token tokporten = null;
 
 	public static final int PORT = 7000;
+    public static final String server = "http://scratchy.cs.umu.se:";
+    public static final String htmlfile = "/home/c08/c08esn/testres.html";
 
 	public static ToWeb writeWeb;
 
@@ -75,7 +77,7 @@ public class SystemTesting {
 		betweenTest();
 		// BETWEEN TESTS
 
-		rundelexp.initdeleteexptest();
+		//rundelexp.initdeleteexptest();
 
 		betweenTest();
 

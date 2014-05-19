@@ -27,7 +27,7 @@ public class TestDeleteExperiment extends Thread {
 	private static boolean sendDeleteExperiment(String expname)
 			throws Exception {
 		token = logindummy.login();
-		URL obj = new URL("http://scratchy.cs.umu.se:" + SystemTesting.PORT
+		URL obj = new URL(SystemTesting.server+ SystemTesting.PORT
 				+ "/experiment/" + expname);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 

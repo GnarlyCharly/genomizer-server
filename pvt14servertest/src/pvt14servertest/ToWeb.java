@@ -21,7 +21,7 @@ public class ToWeb {
 	Writer w;
 
 	public ToWeb() throws FileNotFoundException {
-		File f = new File("/home/pvt/testres.html");
+		File f = new File(SystemTesting.htmlfile);
 		System.out.println("file can be writen to: " + f.canWrite());
 		FileOutputStream is;
 		is = new FileOutputStream(f);

@@ -24,7 +24,7 @@ public class TestLogout extends Thread {
 	private static boolean sendLogout() throws Exception {
 		token = dl.login();
 
-		String url = "http://scratchy.cs.umu.se:" + SystemTesting.PORT
+		String url = SystemTesting.server+ SystemTesting.PORT
 				+ "/login";
 
 		URL obj = new URL(url);

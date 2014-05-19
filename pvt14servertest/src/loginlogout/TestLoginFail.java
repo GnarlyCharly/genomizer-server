@@ -65,7 +65,7 @@ public class TestLoginFail extends Thread {
 
 	// Init the http connection
 	private HttpURLConnection initConnection() throws IOException {
-		String url = "http://scratchy.cs.umu.se:" + SystemTesting.PORT
+		String url = SystemTesting.server+ SystemTesting.PORT
 				+ "/login";
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();

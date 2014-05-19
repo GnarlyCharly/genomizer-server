@@ -6,8 +6,8 @@ public class Values {
 			getannaccTest, sendexpaccTest, sendexptotTest, incdeleteexptot,
 			incsendexpaccTest, logoutacc, logouttot, searchtot, searchacc,
 			loginfailfails, loginfailtot;
-	public final static int NTHREADS = 3;
-	public final static int NLOOPS = 3;
+	public final static int NTHREADS = 1;
+	public final static int NLOOPS = 1;
 
 	public static synchronized void incloginfailtot() {
 		loginfailtot++;

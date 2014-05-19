@@ -55,7 +55,7 @@ public class TestAnnotations implements Runnable {
 
 	// Init the http connection
 	private HttpURLConnection initConnection() throws IOException {
-		String url = "http://scratchy.cs.umu.se:" + SystemTesting.PORT
+		String url = SystemTesting.server+ SystemTesting.PORT
 				+ "/annotation";
 
 		URL obj = new URL(url);

@@ -24,7 +24,7 @@ public class TestSearch extends Thread {
 		String query = URLEncoder.encode("Exp1[ExpID]", "UTF-8");
 		// String url = "http://scratchy.cs.umu.se:7000/search/?annotation=" +
 		// query;
-		String url = "http://localhost:" + SystemTesting.PORT
+		String url = SystemTesting.server + SystemTesting.PORT
 				+ "/search/?annotations=" + query;
 
 		// System.out.println(URLEncoder.encode(url, "UTF-8"));

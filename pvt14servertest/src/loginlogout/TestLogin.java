@@ -86,7 +86,7 @@ public class TestLogin extends Thread {
 
 	// Init the http connection
 	private HttpURLConnection initConnection() throws IOException {
-		String url = "http://itchy.cs.umu.se:" + SystemTesting.PORT + "/login";
+		String url = SystemTesting.server+ SystemTesting.PORT + "/login";
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
