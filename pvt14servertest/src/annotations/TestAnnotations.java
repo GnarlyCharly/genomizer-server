@@ -15,16 +15,24 @@ public class TestAnnotations implements Runnable {
 
 	public static Token token;
 	private static int nloops;
-	private static String response;
+
 	private static BufferedReader in;
 
-	public TestAnnotations(int nloops) {
+
+    private static String response;
+
+	public TestAnnotations() {
 		TestAnnotations.nloops = nloops;
 		token = new Token("a01c9b9d-283a-4bcc-b0ee-96f7c9cef4fd");
 
 	}
 
-	private boolean getAnnotations() throws Exception {
+    public static String getResponse() {
+        return response;
+    }
+
+
+    private boolean getAnnotations() throws Exception {
 
 		HttpURLConnection con = initConnection();
 
@@ -45,7 +53,7 @@ public class TestAnnotations implements Runnable {
 
 		}
 		response = responseBuffer.toString();
-		// System.out.println("RESPONSE: " + response);
+
 		if ((responseCode == 200) && (response != null || response != ""))
 			return true;
 
@@ -75,7 +83,7 @@ public class TestAnnotations implements Runnable {
 
 	@Override
 	public void run() {
-		for (int i = 0; i < nloops; i++) {
+		for (int i = 0; i < Values.NLOOPS; i++) {
 			try {
 				Values.incanntot();
 				if (getAnnotations()) {

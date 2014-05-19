@@ -3,8 +3,7 @@ package annotations;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import pvt14servertest.DummyLogin;
-import pvt14servertest.SystemTesting;
+import pvt14servertest.*;
 
 import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
@@ -18,12 +17,14 @@ import java.net.URL;
  * Time: 11:07 AM
  * To change this template use File | Settings | File Templates.
  */
-public class TestSendAnnotaion {
+public class TestSendAnnotation extends Thread{
 
     private static DummyLogin dl = new DummyLogin();
+    private static TestAnnotations testann = new TestAnnotations();
 
 
-    private static void sendAddAnnotation() throws Exception {
+
+    private static boolean sendAddAnnotation() throws Exception {
         String url =  SystemTesting.server + SystemTesting.PORT
                 + "/annotation";
         URL obj = new URL(url);
@@ -35,7 +36,9 @@ public class TestSendAnnotaion {
         con.setRequestProperty("Content-Type", "application/json");
 
         JsonObject jj=new JsonObject();
-        jj.addProperty("name", "testanno1");
+        String annname = "systemtestann-"+System.nanoTime();
+        SystemTesting.addedfields.addanno(annname);
+        jj.addProperty("name", annname);
         JsonArray ja = new JsonArray();
         JsonPrimitive element = new JsonPrimitive("val1");
         ja.add(element);
@@ -49,8 +52,30 @@ public class TestSendAnnotaion {
         wr.flush();
         wr.close();
 
+        if(testann.getResponse().contains(annname))
+            return true;
+        return false;
+
 //        System.out.println("\nSending 'POST' request to URL : " + url);
 //        System.out.println("Response Body: " + printResponse(con));
 
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < Values.NLOOPS; i++) {
+            try {
+                Values.incanntot();
+                if (sendAddAnnotation()) {
+                    Values.incannacc();
+                }
+
+            } catch (Exception e) {
+
+                resultClass.getInstance().addError(e.getMessage());
+                // System.err.println("ERROR, received: " + response);
+                // e.printStackTrace();
+            }
+        }
     }
 }

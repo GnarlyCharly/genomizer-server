@@ -38,7 +38,7 @@ public class SystemTesting {
 
 	private static search.RunSearch runsearch = new RunSearch();
 
-	public static AddedExperiments addedexps = new AddedExperiments();
+	public static AddedFields addedfields = new AddedFields();
 
 	public static void main(String args[]) throws Exception {
 		dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -77,7 +77,7 @@ public class SystemTesting {
 		betweenTest();
 		// BETWEEN TESTS
 
-		//rundelexp.initdeleteexptest();
+		rundelexp.initdeleteexptest();
 
 		betweenTest();
 

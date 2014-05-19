@@ -86,8 +86,10 @@ public class TestLogin extends Thread {
 
 	// Init the http connection
 	private HttpURLConnection initConnection() throws IOException {
-		String url = SystemTesting.server+ SystemTesting.PORT + "/login";
-		URL obj = new URL(url);
+
+        String url = SystemTesting.server+ SystemTesting.PORT + "/login";
+        System.out.println(url);
+        URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
 		// optional default is GET

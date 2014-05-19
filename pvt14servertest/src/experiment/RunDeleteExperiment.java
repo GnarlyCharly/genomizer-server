@@ -26,7 +26,7 @@ public class RunDeleteExperiment {
 		Thread[] delannotationthreads = new Thread[Values.NTHREADS];
 		for (int i = 0; i < delannotationthreads.length; i++) {
 			delannotationthreads[i] = new Thread(new TestDeleteExperiment(
-					Values.NLOOPS, SystemTesting.addedexps));
+					Values.NLOOPS, SystemTesting.addedfields));
 		}
 		for (Thread thread : delannotationthreads) {
 			thread.start();

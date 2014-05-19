@@ -2,13 +2,31 @@ package pvt14servertest;
 
 public class Values {
 
-	public static volatile int logintotTest, loginaccTest, getanntotTest,
-			getannaccTest, sendexpaccTest, sendexptotTest, incdeleteexptot,
-			incsendexpaccTest, logoutacc, logouttot, searchtot, searchacc,
-			loginfailfails, loginfailtot;
+	public static volatile int logintotTest;
+    public static volatile int loginaccTest;
+    public static volatile int getanntotTest;
+    public static volatile int getannaccTest;
+    public static volatile int sendexpaccTest;
+    public static volatile int sendexptotTest;
+    public static volatile int incdeleteexptot;
+    public static volatile int incsendexpaccTest;
+    public static volatile int logoutacc;
+    public static volatile int logouttot;
+    public static volatile int searchtot;
+    public static volatile int searchacc;
+    public static volatile int loginfailfails;
+    public static volatile int loginfailtot;
+    public static volatile int addannotot;
+    public static volatile int addannoacc;
 	public final static int NTHREADS = 1;
 	public final static int NLOOPS = 1;
 
+    public static synchronized void incAddannotot() {
+        addannotot++;
+    }
+    public static synchronized void incaddannoacc() {
+        addannoacc++;
+    }
 	public static synchronized void incloginfailtot() {
 		loginfailtot++;
 	}

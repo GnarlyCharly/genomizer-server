@@ -7,12 +7,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import pvt14servertest.AddedExperiments;
-import pvt14servertest.DummyLogin;
-import pvt14servertest.SystemTesting;
-import pvt14servertest.Token;
-import pvt14servertest.Values;
-import pvt14servertest.resultClass;
+import pvt14servertest.*;
+import pvt14servertest.AddedFields;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -25,11 +21,11 @@ public class TestSendExperiment extends Thread {
 
 	private DummyLogin logindummy;
 
-	private AddedExperiments exps;
+	private AddedFields exps;
 
 	private int nloops;
 
-	public TestSendExperiment(int nloops, AddedExperiments exps) {
+	public TestSendExperiment(int nloops, AddedFields exps) {
 		this.exps = exps;
 		logindummy = new DummyLogin();
 

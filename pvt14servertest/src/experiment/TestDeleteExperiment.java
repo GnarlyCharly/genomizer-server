@@ -5,21 +5,17 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import pvt14servertest.AddedExperiments;
-import pvt14servertest.DummyLogin;
-import pvt14servertest.SystemTesting;
-import pvt14servertest.Token;
-import pvt14servertest.Values;
-import pvt14servertest.resultClass;
+import pvt14servertest.*;
+import pvt14servertest.AddedFields;
 
 public class TestDeleteExperiment extends Thread {
 
 	private static DummyLogin logindummy = new DummyLogin();
-	private static AddedExperiments exps;
+	private static AddedFields exps;
 	private static int nloops;
 	private static Token token;
 
-	public TestDeleteExperiment(int nloops, AddedExperiments exps) {
+	public TestDeleteExperiment(int nloops, AddedFields exps) {
 		this.exps = exps;
 		this.nloops = nloops;
 	}

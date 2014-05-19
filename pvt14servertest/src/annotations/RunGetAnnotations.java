@@ -41,7 +41,7 @@ public class RunGetAnnotations {
 		Thread[] annotationthreads = new Thread[Values.NTHREADS];
 		for (int i = 0; i < annotationthreads.length; i++) {
 			annotationthreads[i] = new Thread(
-					new TestAnnotations(Values.NLOOPS));
+					new TestAnnotations());
 		}
 		for (Thread thread : annotationthreads) {
 			thread.start();

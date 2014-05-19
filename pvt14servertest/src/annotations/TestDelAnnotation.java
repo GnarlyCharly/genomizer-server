@@ -20,7 +20,7 @@ public class TestDelAnnotation {
     private static void sendDeleteAnnotation() throws Exception {
 
         String url = SystemTesting.server+ SystemTesting.PORT
-                + "/annotation/testanno221";
+                + "/annotation/"+SystemTesting.addedfields.getann();
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 

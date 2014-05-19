@@ -25,7 +25,7 @@ public class RunSendExperiment {
 		Thread[] sendexp = new Thread[Values.NTHREADS];
 		for (int i = 0; i < sendexp.length; i++) {
 			sendexp[i] = new Thread(new TestSendExperiment(Values.NLOOPS,
-					SystemTesting.addedexps));
+					SystemTesting.addedfields));
 		}
 		for (Thread thread : sendexp) {
 			thread.start();
