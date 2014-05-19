@@ -29,11 +29,7 @@ public class TestLoginFail extends Thread {
 	public boolean sendLogin(String uname, String pass) throws Exception {
 
 		HttpURLConnection con = initConnection();
-
-		// Create the json string output from uname and pass
 		String json_output = "";// createJsonString(uname, pass);
-
-		// Send json output to con
 		sendData(con, json_output);
 
 		int responseCode = con.getResponseCode();
@@ -47,11 +43,8 @@ public class TestLoginFail extends Thread {
 		}
 		in.close();
 		String response = responseBuffer.toString();
-
 		Gson gson = new Gson();
 		token = gson.fromJson(response, Token.class);
-
-		// System.out.println(token.getToken());
 
 		if (token.getToken() != null || token.getToken() != ""
 				&& responseCode == 200) {
@@ -69,24 +62,12 @@ public class TestLoginFail extends Thread {
 				+ "/login";
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-		// optional default is GET
 		con.setRequestMethod("POST");
-		// add request header
 		con.setRequestProperty("Content-Type", "application/json");
 		con.setDoOutput(true);
-
 		return con;
 	}
 
-	// Create the json string output from uname and pass
-	private String createJsonString(String uname, String pass) {
-		JsonObject jj = new JsonObject();
-		// SEND RANDOM DATA LOGIN
-		jj.addProperty("username", uname);
-		jj.addProperty("password", pass);
-		return jj.toString();
-	}
 
 	// Send json output to con
 	private void sendData(URLConnection con, String json_output)

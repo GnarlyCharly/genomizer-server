@@ -23,25 +23,17 @@ public class TestLogout extends Thread {
 
 	private static boolean sendLogout() throws Exception {
 		token = dl.login();
-
 		String url = SystemTesting.server+ SystemTesting.PORT
 				+ "/login";
 
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-		// optional default is GET
 		con.setRequestMethod("DELETE");
-
-		// add request header
 		con.setRequestProperty("Content-Type", "application/json");
 		con.setRequestProperty("Authorization", token.getToken());
-
 		responseCode = con.getResponseCode();
-		// System.out.print(responseCode + "  ");
 		BufferedReader in = new BufferedReader(new InputStreamReader(
 				con.getInputStream()));
-
 		String inputLine;
 		StringBuffer responseBuffer = new StringBuffer();
 
@@ -49,7 +41,6 @@ public class TestLogout extends Thread {
 			responseBuffer.append(inputLine);
 		}
 		in.close();
-
 		String response = responseBuffer.toString();
 		if (responseCode == 200)
 			return true;
@@ -68,9 +59,6 @@ public class TestLogout extends Thread {
 				}
 
 			} catch (Exception e) {
-
-				// e.printStackTrace();
-
 				resultClass.getInstance().addError(
 						e.getMessage() + " Error:" + responseCode);
 			}

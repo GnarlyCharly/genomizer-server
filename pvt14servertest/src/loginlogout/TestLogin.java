@@ -11,10 +11,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.SecureRandom;
 
-import pvt14servertest.SystemTesting;
-import pvt14servertest.Token;
-import pvt14servertest.Values;
-import pvt14servertest.resultClass;
+import pvt14servertest.*;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -46,7 +43,7 @@ public class TestLogin extends Thread {
 			HttpURLConnection con = initConnection();
 
 			// Create the json string output from uname and pass
-			String json_output = createJsonString(uname, pass);
+			String json_output =   new JsonBuild().property("username", uname).property("password", pass).build().toString();
 
 			// Send json output to con
 			sendData(con, json_output);
@@ -88,7 +85,6 @@ public class TestLogin extends Thread {
 	private HttpURLConnection initConnection() throws IOException {
 
         String url = SystemTesting.server+ SystemTesting.PORT + "/login";
-        System.out.println(url);
         URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -102,13 +98,11 @@ public class TestLogin extends Thread {
 	}
 
 	// Create the json string output from uname and pass
-	private String createJsonString(String uname, String pass) {
-		JsonObject jj = new JsonObject();
-		// SEND RANDOM DATA LOGIN
-		jj.addProperty("username", uname);
-		jj.addProperty("password", pass);
-		return jj.toString();
-	}
+
+
+        // SEND RANDOM DATA LOGIN
+
+
 
 	// Send json output to con
 	private void sendData(URLConnection con, String json_output)

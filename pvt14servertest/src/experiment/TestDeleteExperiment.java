@@ -26,14 +26,10 @@ public class TestDeleteExperiment extends Thread {
 		URL obj = new URL(SystemTesting.server+ SystemTesting.PORT
 				+ "/experiment/" + expname);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-		// optional default is GET
 		con.setRequestMethod("DELETE");
-		// add request header
 		con.setRequestProperty("Authorization", token.getToken());
 		con.setRequestProperty("Content-Type", "application/json");
 		int responseCode = con.getResponseCode();
-
 		BufferedReader in = new BufferedReader(new InputStreamReader(
 				con.getInputStream()));
 		String inputLine;

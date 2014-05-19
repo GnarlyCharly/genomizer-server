@@ -19,7 +19,10 @@ public class TestAnnotations implements Runnable {
 	private static BufferedReader in;
 
 
-    private static String response;
+    private volatile static String response="";
+
+
+    private static int responseCode;
 
 	public TestAnnotations() {
 		TestAnnotations.nloops = nloops;
@@ -27,16 +30,19 @@ public class TestAnnotations implements Runnable {
 
 	}
 
-    public static String getResponse() {
+    public synchronized static String getResponse() {
         return response;
     }
 
+    public static int getResponseCode() {
+        return responseCode;
+    }
 
-    private boolean getAnnotations() throws Exception {
+    public boolean getAnnotations() throws Exception {
 
 		HttpURLConnection con = initConnection();
 
-		int responseCode = con.getResponseCode();
+		responseCode = con.getResponseCode();
 		// System.out.println("\nSending 'GET' request to URL : " + url);
 		// System.out.println("Response Code : " + responseCode);
 

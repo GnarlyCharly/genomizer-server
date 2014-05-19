@@ -76,26 +76,17 @@ public class TestSendExperiment extends Thread {
 		// add request header
 		con.setRequestProperty("Authorization", token.getToken());
 		con.setRequestProperty("Content-Type", "application/jsovaluen");
-		JsonObject ja = new JsonObject();
+        String expname = "ST-" + System.nanoTime();
+        exps.addExps(expname);
 
-		String expname = "Jonas_Experiment" + System.nanoTime();
-		exps.addExps(expname);
-		ja.addProperty("name", expname);
-		ja.addProperty("createdBy", "jonas");
+        JsonArray annotations = new JsonArray();
 
-		JsonArray annotations = new JsonArray();
+        annotations.add(new JsonBuild().property("id","1")
+                .property(props[0], props[1]).property(props[2], props[3]).build());
 
-		JsonObject ann1 = new JsonObject();
-		// ann1.addProperty(props[0], props[1]);
-		ann1.addProperty("id", "1");
-		ann1.addProperty(props[0], props[1]);
-		ann1.addProperty(props[2], props[3]);
-		annotations.add(ann1);
-
-		ja.add("annotations", annotations);
-
-		String json_output = ja.toString();
-		// System.out.println(json_output);
+        String json_output = new JsonBuild().property("name", expname)
+                .property("createdBy", "SystemTest").add("annotations",annotations)
+                .build().toString();
 
 		con.setDoOutput(true);
 		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
