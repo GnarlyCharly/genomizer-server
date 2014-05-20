@@ -1,5 +1,7 @@
 package pvt14servertest;
 
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -9,9 +11,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.SecureRandom;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 public class DummyLogin {
     public Token token;
@@ -24,11 +23,10 @@ public class DummyLogin {
             String json_output = new JsonBuild().property("username", randomtext()).
                     property("password", randomtext()).build().toString();
             sendData(con, json_output);
-            int responseCode = con.getResponseCode();
             BufferedReader in = new BufferedReader(new InputStreamReader(
                     con.getInputStream()));
             String inputLine;
-            StringBuffer responseBuffer = new StringBuffer();
+            StringBuilder responseBuffer = new StringBuilder();
             while ((inputLine = in.readLine()) != null) {
                 responseBuffer.append(inputLine);
             }
@@ -37,8 +35,7 @@ public class DummyLogin {
 
             Gson gson = new Gson();
             token = gson.fromJson(response, Token.class);
-        } catch (IOException e) {
-            //DO NADA
+        } catch (IOException ignore) {
         }
         return token;
     }

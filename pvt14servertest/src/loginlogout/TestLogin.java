@@ -1,5 +1,8 @@
 package loginlogout;
 
+import com.google.gson.Gson;
+import pvt14servertest.*;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -11,16 +14,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.SecureRandom;
 
-import pvt14servertest.*;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
 public class TestLogin extends Thread {
 	public static Token token;
-	public Token tokporten = null;
-
-	public int tok = 0;
 
 	public String[] corrToken = "3d5f2eed-6dcf-48a4-906e-1643d54868bb"
 			.split("-");
@@ -29,30 +24,20 @@ public class TestLogin extends Thread {
 
 	}
 
-	/**
-	 * Sends a login request
-	 * 
-	 * @param uname
-	 * @param pass
-	 * @return
-	 * @throws Exception
-	 */
-	public boolean sendLogin(String uname, String pass) throws Exception {
+	@SuppressWarnings("ConstantConditions")
+    public boolean sendLogin(String uname, String pass) throws IOException, NullPointerException {
 		try {
 
 			HttpURLConnection con = initConnection();
-
-			// Create the json string output from uname and pass
-			String json_output =   new JsonBuild().property("username", uname).property("password", pass).build().toString();
-
-			// Send json output to con
+			String json_output =   new JsonBuild().property("username", uname).
+                    property("password", pass).build().toString();
 			sendData(con, json_output);
 
 			int responseCode = con.getResponseCode();
 			BufferedReader in = new BufferedReader(new InputStreamReader(
 					con.getInputStream()));
 			String inputLine;
-			StringBuffer responseBuffer = new StringBuffer();
+			StringBuilder responseBuffer = new StringBuilder();
 
 			while ((inputLine = in.readLine()) != null) {
 				responseBuffer.append(inputLine);
@@ -62,10 +47,7 @@ public class TestLogin extends Thread {
 
 			Gson gson = new Gson();
 			token = gson.fromJson(response, Token.class);
-
-			// System.out.println(token.getToken());
-
-			if (token.getToken() != null || token.getToken() != ""
+			if (token.getToken() != null || !token.getToken().equals("")
 					&& responseCode == 200) {
 				for (int i = 0; i < 5; i++) {
 					if (token.getToken().split("-")[i].length() != corrToken[i]
@@ -75,36 +57,26 @@ public class TestLogin extends Thread {
 				return true;
 			}
 
-		} catch (MalformedURLException e) {
+		} catch (MalformedURLException ignored) {
 		}
+
 		return false;
 
 	}
 
-	// Init the http connection
 	private HttpURLConnection initConnection() throws IOException {
 
         String url = SystemTesting.server+ SystemTesting.PORT + "/login";
         URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-		// optional default is GET
 		con.setRequestMethod("POST");
-		// add request header
 		con.setRequestProperty("Content-Type", "application/json");
 		con.setDoOutput(true);
 
 		return con;
 	}
 
-	// Create the json string output from uname and pass
-
-
-        // SEND RANDOM DATA LOGIN
-
-
-
-	// Send json output to con
 	private void sendData(URLConnection con, String json_output)
 			throws IOException {
 		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
@@ -112,6 +84,7 @@ public class TestLogin extends Thread {
 		wr.flush();
 		wr.close();
 	}
+
 
 	private static String randomtext() {
 		SecureRandom random = new SecureRandom();

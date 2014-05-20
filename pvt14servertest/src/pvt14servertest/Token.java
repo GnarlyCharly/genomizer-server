@@ -1,7 +1,5 @@
 package pvt14servertest;
 
-import com.google.gson.annotations.Expose;
-
 public class Token {
 
     private String token;

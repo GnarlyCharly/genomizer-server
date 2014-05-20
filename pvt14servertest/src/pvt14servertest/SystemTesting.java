@@ -1,19 +1,19 @@
 package pvt14servertest;
 
-import java.io.IOException;
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 import annotations.RunAddAnnotation;
 import annotations.RunDelAnnotation;
+import annotations.RunGetAnnotations;
+import experiment.RunDeleteExperiment;
+import experiment.RunSendExperiment;
+import filetransfer.RunTestDownload;
 import loginlogout.RunLogin;
 import loginlogout.RunLoginFail;
 import loginlogout.RunLogout;
 import search.RunSearch;
-import annotations.RunGetAnnotations;
-import experiment.RunDeleteExperiment;
-import experiment.RunSendExperiment;
+
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class SystemTesting {
     public static Token token;
@@ -27,8 +27,7 @@ public class SystemTesting {
     public static Date date;
 
     private static RunLogin runlogin = new RunLogin();
-    private static RunLoginFail runloginfail = new RunLoginFail(
-            "Testing if invalid information fails");
+    private static RunLoginFail runloginfail = new RunLoginFail();
     private static loginlogout.RunLogout runlogout = new RunLogout();
 
     private static RunGetAnnotations rungetannotations = new RunGetAnnotations();
@@ -39,6 +38,9 @@ public class SystemTesting {
     private static RunDeleteExperiment rundelexp = new RunDeleteExperiment();
 
     private static RunSearch runsearch = new RunSearch();
+
+    private static RunTestDownload runTestDownload = new RunTestDownload();
+
 
     public static AddedFields addedfields = new AddedFields();
 
@@ -52,7 +54,7 @@ public class SystemTesting {
 
     }
 
-    private static void runtests() throws IOException, Exception {
+    private static void runtests() throws  Exception {
         runlogin.initlogintest();
         betweenTest();
         runloginfail.initloginfailtest();
@@ -65,16 +67,21 @@ public class SystemTesting {
         betweenTest();
         rundelexp.initdeleteexptest();
         betweenTest();
-        runsearch.initsearchtest();
+       runsearch.initsearchtest();
         betweenTest();
         runsendannotations.initaddannotest();
         betweenTest();
         rundelannotations.initdelannotest();
+        betweenTest();
+        //Requires runsearch
+       runTestDownload.initdownloadtest();
 
     }
 
+
     private static void betweenTest() {
         System.out.flush();
+        //clear error log
         resultClass.getInstance().getMap().clear();
     }
 

@@ -1,29 +1,25 @@
 package loginlogout;
 
-import java.io.IOException;
-
 import pvt14servertest.SystemTesting;
 import pvt14servertest.Values;
 import pvt14servertest.resultClass;
 
+import java.io.IOException;
+
 public class RunLoginFail {
 
-	private static String teststring;
 
-	public RunLoginFail(String teststring) {
-		this.teststring = teststring;
-	}
+
 
 	/**
 	 * Init login tests, mainly prints to console and web
 	 * 
-	 * @throws Exception
-	 * @throws IOException
 	 */
-	public static void initloginfailtest() throws Exception, IOException {
+	public  void initloginfailtest()  {
+        try {
 		long startTime = System.currentTimeMillis();
-		testLoginFail();
-		long endTime = System.currentTimeMillis();
+            testLoginFail();
+        long endTime = System.currentTimeMillis();
 		System.out.println("  " + (double) ((endTime) - (startTime)) / 1000
 				+ "s");
 
@@ -31,14 +27,19 @@ public class RunLoginFail {
 		SystemTesting.writeWeb.createTestSection("Failures:<br>"
 				+ resultClass.getInstance().getMap().toString());
 		SystemTesting.writeWeb.endTest();
+        } catch (InterruptedException e) {
+            System.err.println("LoginFail failed");
+        } catch (IOException e) {
+            System.err.println("LoginFail failed");
+        }
 	}
 
 	/**
 	 * Start the login tests
 	 * 
-	 * @throws Exception
 	 */
-	private static void testLoginFail() throws Exception {
+	private  void testLoginFail() throws InterruptedException, IOException {
+		float percent;
 		TestLoginFail[] objs = new TestLoginFail[Values.NTHREADS];
 		for (int i = 0; i < objs.length; i++) {
 			objs[i] = new TestLoginFail();
@@ -50,29 +51,27 @@ public class RunLoginFail {
 		for (Thread thread : objs) {
 			thread.join();
 		}
-		float per;
 		if (Values.loginfailtot != 0) {
-			per = (float) Values.loginfailfails / (float) Values.loginfailtot
+			percent = (float) Values.loginfailfails / (float) Values.loginfailtot
 					* 100;
 
 		} else {
-			per = 0;
+			percent = 0;
 		}
 		System.out.print("Login fail tests: " + Values.loginfailfails
-				+ "  tot tests : " + Values.loginfailtot + "   percent:" + per);
+                + "  tot tests : " + Values.loginfailtot + "   percent:" + percent+"%");
 
 		SystemTesting.writeWeb.createTestSection("Test: Login Fail "
-				+ Values.NTHREADS
-				+ " Thread * "
-				+ Values.NLOOPS
-				+ " [Random Unames/Password]<br>Test info:"
-				+ teststring
-				+ "<br> Test date: "
-				+ pvt14servertest.SystemTesting.dateFormat
-						.format(pvt14servertest.SystemTesting.date)
-				+ "<br><br>");
+                + Values.NTHREADS
+                + " Thread * "
+                + Values.NLOOPS
+                + " [Random Unames/Password]<br>Test info:"
+                + "Testing if invalid information fails"
+                + "<br> Test date: "
+                + pvt14servertest.SystemTesting.dateFormat
+                .format(pvt14servertest.SystemTesting.date)
+                + "<br><br>");
 
-		SystemTesting.writeWeb.writeToHTML((int) per);
-
+		SystemTesting.writeWeb.writeToHTML((int) percent);
 	}
 }

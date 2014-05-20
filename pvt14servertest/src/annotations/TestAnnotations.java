@@ -1,20 +1,19 @@
 package annotations;
 
+import pvt14servertest.SystemTesting;
+import pvt14servertest.Token;
+import pvt14servertest.Values;
+import pvt14servertest.resultClass;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import pvt14servertest.SystemTesting;
-import pvt14servertest.Token;
-import pvt14servertest.Values;
-import pvt14servertest.resultClass;
-
 public class TestAnnotations implements Runnable {
 
 	public static Token token;
-	private static int nloops;
 
 	private static BufferedReader in;
 
@@ -25,7 +24,6 @@ public class TestAnnotations implements Runnable {
     private static int responseCode;
 
 	public TestAnnotations() {
-		TestAnnotations.nloops = nloops;
 		token = new Token("a01c9b9d-283a-4bcc-b0ee-96f7c9cef4fd");
 
 	}
@@ -34,10 +32,8 @@ public class TestAnnotations implements Runnable {
         return response;
     }
 
-    public static int getResponseCode() {
-        return responseCode;
-    }
 
+    @SuppressWarnings({"EmptyCatchBlock", "StringBufferMayBeStringBuilder"})
     public boolean getAnnotations() throws Exception {
 
 		HttpURLConnection con = initConnection();
@@ -57,13 +53,12 @@ public class TestAnnotations implements Runnable {
 			in.close();
 		} catch (IOException e) {
 
+
 		}
 		response = responseBuffer.toString();
 
-		if ((responseCode == 200) && (response != null || response != ""))
-			return true;
+		return (responseCode == 200) && (response != null || response.equals(""));
 
-		return false;
 
 	}
 

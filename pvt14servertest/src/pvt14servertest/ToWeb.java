@@ -1,16 +1,9 @@
 package pvt14servertest;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
 
 public class ToWeb {
 
-    Writer writer = null;
     String starthtml = "<html><head>";
     String endhtml = "</body></html>";
     String css = "<style media=\"screen\" type=\"text/css\">"
@@ -22,7 +15,7 @@ public class ToWeb {
 
     public ToWeb() throws FileNotFoundException {
         File f = new File(SystemTesting.htmlfile);
-        System.out.println("file can be writen to: " + f.canWrite());
+        System.out.println("HTML LOG FILE " + (f.canWrite() ? "EXISTS" : "DOES NOT EXIST [testres.html]"));
         FileOutputStream is;
         is = new FileOutputStream(f);
 

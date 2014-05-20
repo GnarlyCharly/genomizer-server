@@ -6,7 +6,8 @@ public class AddedFields {
 
     private ArrayList<String> addedexpnames = new ArrayList<String>();
     private ArrayList<String> addedannnames = new ArrayList<String>();
-    private volatile int expposition = 0, annposition = 0;
+    private  ArrayList<String> addedfileurls = new ArrayList<String>();
+    private volatile int expposition = 0, annposition = 0,fileurlposition = 0;
 
     public synchronized void addExps(String name) {
         addedexpnames.add(name);
@@ -14,6 +15,10 @@ public class AddedFields {
 
     public synchronized void addanno(String name) {
         addedannnames.add(name);
+    }
+
+    public  synchronized void addfileurls(String name){
+        addedfileurls.add(name);
     }
 
     public synchronized String getExp() {
@@ -34,8 +39,16 @@ public class AddedFields {
         return ret;
     }
 
-    public synchronized int getsize() {
-        return addedexpnames.size();
+    public synchronized String getfileurl() {
+        String ret = "";
+        if (fileurlposition >= 0) {
+            ret = addedfileurls.get(fileurlposition);
+            fileurlposition++;
+        }
+        return ret;
     }
 
+    public synchronized int geturlsize(){
+        return addedfileurls.size();
+    }
 }

@@ -1,28 +1,23 @@
 package experiment;
 
+import pvt14servertest.*;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import pvt14servertest.*;
-import pvt14servertest.AddedFields;
-
 public class TestDeleteExperiment extends Thread {
 
 	private static DummyLogin logindummy = new DummyLogin();
-	private static AddedFields exps;
-	private static int nloops;
-	private static Token token;
 
-	public TestDeleteExperiment(int nloops, AddedFields exps) {
-		this.exps = exps;
-		this.nloops = nloops;
+	public TestDeleteExperiment() {
 	}
 
-	private static boolean sendDeleteExperiment(String expname)
+    @SuppressWarnings("StringBufferMayBeStringBuilder")
+    private static boolean sendDeleteExperiment(String expname)
 			throws Exception {
-		token = logindummy.login();
+        Token token = logindummy.login();
 		URL obj = new URL(SystemTesting.server+ SystemTesting.PORT
 				+ "/experiment/" + expname);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -40,20 +35,16 @@ public class TestDeleteExperiment extends Thread {
 		}
 		in.close();
 
-		String response = responseBuffer.toString();
 
-		if (responseCode == 200) {
-			return true;
-		}
-		return false;
+		return responseCode == 200;
 	}
 
 	@Override
 	public void run() {
-		for (int i = 0; i < nloops; i++) {
+		for (int i = 0; i < Values.NLOOPS; i++) {
 			try {
 				Values.incdeleteexptot();
-				if (sendDeleteExperiment(exps.getExp())) {
+				if (sendDeleteExperiment(SystemTesting.addedfields.getExp())) {
 					Values.incdeleteexpacc();
 				}
 			} catch (Exception e) {

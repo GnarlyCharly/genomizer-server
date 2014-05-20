@@ -20,22 +20,25 @@ public class RunAddAnnotation {
     /**
      * Init annotations test , mainly the prints to console and web
      *
-     * @throws java.io.IOException
-     * @throws InterruptedException
      */
-    public static void initaddannotest() throws IOException, InterruptedException {
-        long startTime;
-        long endTime;
-        startTime = System.currentTimeMillis();
-        testsendAnnotations();
-        endTime = System.currentTimeMillis();
+    public void initaddannotest() {
+
+        long startTime = System.currentTimeMillis();
+        try {
+            testsendAnnotations();
+        long endTime = System.currentTimeMillis();
+
         System.out.println("  " + (double) ((endTime) - (startTime)) / 1000
                 + "s");
-
         System.out.println(resultClass.getInstance().getMap().toString());
         SystemTesting.writeWeb.createTestSection("Failures:<br>"
                 + resultClass.getInstance().getMap().toString());
         SystemTesting.writeWeb.endTest();
+        } catch (IOException e) {
+            System.err.println("Add annotations failed");
+        } catch (InterruptedException e) {
+            System.err.println("Add annotations failed");
+        }
 
     }
 
@@ -45,31 +48,32 @@ public class RunAddAnnotation {
      * @throws IOException
      * @throws InterruptedException
      */
-    private static void testsendAnnotations() throws IOException,
+    private  void testsendAnnotations() throws IOException,
             InterruptedException {
-        Thread[] annotationthreads = new Thread[Values.NTHREADS];
-        for (int i = 0; i < annotationthreads.length; i++) {
-            annotationthreads[i] = new Thread(
+        float percent;
+
+        Thread[] threads = new Thread[Values.NTHREADS];
+        for (int i = 0; i < threads.length; i++) {
+            threads[i] = new Thread(
                     new TestAddAnnotation());
         }
-        for (Thread thread : annotationthreads) {
+        for (Thread thread : threads) {
             thread.start();
             Thread.sleep(5);
         }
 
-        for (Thread thread : annotationthreads) {
+        for (Thread thread : threads) {
             thread.join();
         }
-        float per;
-        if (Values.addannotot != 0) {
-            per = (float) Values.addannoacc / (float) Values.addannotot
-                    * 100;
 
+        if (Values.addannotot != 0) {
+            percent = (float) Values.addannoacc / (float) Values.addannotot
+                    * 100;
         } else {
-            per = 0;
+            percent = 0;
         }
-        System.out.print("Add Annotations: succ test: " + Values.addannoacc
-                + "  tottests: " + Values.addannotot + " percent:" + per);
+        System.out.print("Add Annotations: success: " + Values.addannoacc
+                + "  tottests: " + Values.addannotot + " percent: " + percent+"%");
 
         SystemTesting.writeWeb
                 .createTestSection("Test:Add Annotations: "
@@ -80,8 +84,7 @@ public class RunAddAnnotation {
                         + "Test info: Checking if annotation has been added.<br> Test date: "
                         + SystemTesting.dateFormat.format(SystemTesting.date)
                         + "<br><br>");
-        SystemTesting.writeWeb.writeToHTML((int) per);
-
+        SystemTesting.writeWeb.writeToHTML((int) percent);
     }
 
 }

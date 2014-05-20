@@ -1,32 +1,29 @@
 package loginlogout;
 
+import com.google.gson.Gson;
+import pvt14servertest.SystemTesting;
+import pvt14servertest.Token;
+import pvt14servertest.Values;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.SecureRandom;
-
-import pvt14servertest.SystemTesting;
-import pvt14servertest.Token;
-import pvt14servertest.Values;
-import pvt14servertest.resultClass;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 public class TestLoginFail extends Thread {
 
-	private Token token;
-
-	public TestLoginFail() {
+    public TestLoginFail() {
 
 	}
 
-	public boolean sendLogin(String uname, String pass) throws Exception {
+	@SuppressWarnings("ConstantConditions")
+    public boolean sendLogin() throws Exception {
+		String response;
+        Gson gson;
+        Token token;
 
 		HttpURLConnection con = initConnection();
 		String json_output = "";// createJsonString(uname, pass);
@@ -36,23 +33,19 @@ public class TestLoginFail extends Thread {
 		BufferedReader in = new BufferedReader(new InputStreamReader(
 				con.getInputStream()));
 		String inputLine;
-		StringBuffer responseBuffer = new StringBuffer();
+		StringBuilder responseBuffer = new StringBuilder();
 
 		while ((inputLine = in.readLine()) != null) {
 			responseBuffer.append(inputLine);
 		}
 		in.close();
-		String response = responseBuffer.toString();
-		Gson gson = new Gson();
-		token = gson.fromJson(response, Token.class);
+        response = responseBuffer.toString();
+        gson = new Gson();
+        token = gson.fromJson(response, Token.class);
 
-		if (token.getToken() != null || token.getToken() != ""
-				&& responseCode == 200) {
+        return !(token.getToken() != null || !token.getToken().equals("")
+				&& responseCode == 200);
 
-			return false;
-		}
-
-		return true;
 
 	}
 
@@ -78,29 +71,18 @@ public class TestLoginFail extends Thread {
 		wr.close();
 	}
 
-	private static String randomtext() {
-		SecureRandom random = new SecureRandom();
-		return new BigInteger((int) (Math.round(Math.random() + 3) * 150),
-				random).toString(32);
-
-	}
 
 	@Override
 	public void run() {
 		for (int i = 0; i < Values.NLOOPS; i++) {
 			try {
 				Values.incloginfailtot();
-				if (sendLogin(randomtext(), randomtext())) {
+				if (sendLogin()) {
 					Values.incloginfailfails();
 				}
 
 			} catch (Exception e) {
 				Values.incloginfailfails();
-				// if (e.getMessage().compareTo("Stream closed") == 0)
-				// SystemTesting.incloginacc();
-				// e.printStackTrace();
-
-				resultClass.getInstance().addError(e.getMessage());
 			}
 		}
 	}

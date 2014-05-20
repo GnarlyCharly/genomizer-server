@@ -1,17 +1,18 @@
 package experiment;
 
-import java.io.IOException;
-
 import pvt14servertest.SystemTesting;
 import pvt14servertest.Values;
 import pvt14servertest.resultClass;
 
+import java.io.IOException;
+
 public class RunSendExperiment {
 
-	public static void initsendexptest() throws Exception, IOException {
+	public  void initsendexptest()  {
 		long startTime = System.currentTimeMillis();
-		testSendExp();
-		long endTime = System.currentTimeMillis();
+        try {
+            testSendExp();
+        long endTime = System.currentTimeMillis();
 		System.out.println("  " + (double) ((endTime) - (startTime)) / 1000
 				+ "s");
 
@@ -19,45 +20,49 @@ public class RunSendExperiment {
 		SystemTesting.writeWeb.createTestSection("Failures:<br>"
 				+ resultClass.getInstance().getMap().toString());
 		SystemTesting.writeWeb.endTest();
+        } catch (IOException e) {
+            System.err.println("Add Experiment failed");
+        } catch (InterruptedException e) {
+            System.err.println("Add Experiment failed");
+        }
 	}
 
-	private static void testSendExp() throws IOException, InterruptedException {
-		Thread[] sendexp = new Thread[Values.NTHREADS];
-		for (int i = 0; i < sendexp.length; i++) {
-			sendexp[i] = new Thread(new TestSendExperiment(Values.NLOOPS,
-					SystemTesting.addedfields));
+	private  void testSendExp() throws IOException, InterruptedException {
+        float percent;
+
+		Thread[] threads = new Thread[Values.NTHREADS];
+		for (int i = 0; i < threads.length; i++) {
+			threads[i] = new TestSendExperiment();
 		}
-		for (Thread thread : sendexp) {
+		for (Thread thread : threads) {
 			thread.start();
 			Thread.sleep(5);
 		}
 
-		for (Thread thread : sendexp) {
+		for (Thread thread : threads) {
 			thread.join();
 		}
-		float per;
 		if (Values.sendexptotTest != 0) {
-			per = (float) Values.sendexpaccTest / (float) Values.sendexptotTest
+			percent = (float) Values.sendexpaccTest / (float) Values.sendexptotTest
 					* 100;
 
 		} else {
-			per = 0;
+			percent = 0;
 		}
-		System.out.print("Send experiment create: succ test: "
-				+ Values.sendexpaccTest + "  tottests: "
-				+ Values.sendexptotTest + " percent:" + per);
+		System.out.print("Send experiment create: success: "
+                + Values.sendexpaccTest + "  tottests: "
+                + Values.sendexptotTest + " percent:" + percent+"%");
 
 		SystemTesting.writeWeb
 				.createTestSection("Test: Send experiment create: "
-						+ Values.NTHREADS
-						+ " Thread * "
-						+ Values.NLOOPS
-						+ " <br>"
-						+ "Test info: Checking if the server return response code \"200\".<br> Test date: "
-						+ SystemTesting.dateFormat.format(SystemTesting.date)
-						+ "<br><br>");
-		SystemTesting.writeWeb.writeToHTML((int) per);
-
+                        + Values.NTHREADS
+                        + " Thread * "
+                        + Values.NLOOPS
+                        + " <br>"
+                        + "Test info: Checking if the server return response code \"200\".<br> Test date: "
+                        + SystemTesting.dateFormat.format(SystemTesting.date)
+                        + "<br><br>");
+		SystemTesting.writeWeb.writeToHTML((int) percent);
 	}
 
 }

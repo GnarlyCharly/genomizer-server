@@ -1,22 +1,21 @@
 package search;
 
-import java.io.IOException;
-
 import pvt14servertest.SystemTesting;
 import pvt14servertest.Values;
 import pvt14servertest.resultClass;
+
+import java.io.IOException;
 
 public class RunSearch {
 	/**
 	 * Init login tests, mainly prints to console and web
 	 * 
-	 * @throws Exception
-	 * @throws IOException
 	 */
-	public static void initsearchtest() throws Exception, IOException {
+	public  void initsearchtest()  {
+        try {
 		long startTime = System.currentTimeMillis();
-		testSearch();
-		long endTime = System.currentTimeMillis();
+            testSearch();
+        long endTime = System.currentTimeMillis();
 		System.out.println("  " + (double) ((endTime) - (startTime)) / 1000
 				+ "s");
 
@@ -24,46 +23,50 @@ public class RunSearch {
 		SystemTesting.writeWeb.createTestSection("Failures:<br>"
 				+ resultClass.getInstance().getMap().toString());
 		SystemTesting.writeWeb.endTest();
+        } catch (InterruptedException e) {
+            System.err.println("Search failed");
+        } catch (IOException e) {
+            System.err.println("Search failed");
+        }
 	}
 
 	/**
 	 * Start the login tests
 	 * 
-	 * @throws Exception
 	 */
-	private static void testSearch() throws Exception {
-		TestSearch[] objs = new TestSearch[Values.NTHREADS];
-		for (int i = 0; i < objs.length; i++) {
-			objs[i] = new TestSearch();
+	private  void testSearch() throws InterruptedException, IOException {
+		float percent;
+		TestSearch[] threads = new TestSearch[Values.NTHREADS];
+		for (int i = 0; i < threads.length; i++) {
+			threads[i] = new TestSearch();
 		}
-		for (Thread thread : objs) {
+		for (Thread thread : threads) {
 			thread.start();
 			Thread.sleep(5);
 		}
-		for (Thread thread : objs) {
+		for (Thread thread : threads) {
 			thread.join();
 		}
-		float per;
 		if (Values.searchtot != 0) {
-			per = (float) Values.searchacc / (float) Values.searchtot * 100;
+			percent = (float) Values.searchacc / (float) Values.searchtot * 100;
 
 		} else {
-			per = 0;
+			percent = 0;
 		}
-		System.out.print("Search succ tests: " + Values.searchacc
-				+ "  tot tests : " + Values.searchtot + "   percent:" + per);
+		System.out.print("Search success: " + Values.searchacc
+                + "  tot tests : " + Values.searchtot + "   percent:" + percent+"%");
 
 		SystemTesting.writeWeb.createTestSection("Test: search "
-				+ Values.NTHREADS
-				+ " Thread * "
-				+ Values.NLOOPS
-				+ " [Random Unames/Password]<br>Test info:"
-				+ "Testing response code 200<br> Test date: "
-				+ pvt14servertest.SystemTesting.dateFormat
-						.format(pvt14servertest.SystemTesting.date)
-				+ "<br><br>");
+                + Values.NTHREADS
+                + " Thread * "
+                + Values.NLOOPS
+                + " [Random Unames/Password]<br>Test info:"
+                + "Testing response code 200<br> Test date: "
+                + pvt14servertest.SystemTesting.dateFormat
+                .format(pvt14servertest.SystemTesting.date)
+                + "<br><br>");
 
-		SystemTesting.writeWeb.writeToHTML((int) per);
+		SystemTesting.writeWeb.writeToHTML((int) percent);
 
 	}
 

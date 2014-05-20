@@ -1,23 +1,23 @@
 package loginlogout;
 
-import java.io.IOException;
-
 import pvt14servertest.SystemTesting;
 import pvt14servertest.Values;
 import pvt14servertest.resultClass;
+
+import java.io.IOException;
 
 public class RunLogout {
 
 	/**
 	 * Init login tests, mainly prints to console and web
 	 * 
-	 * @throws Exception
-	 * @throws IOException
 	 */
-	public static void initlogouttest() throws Exception, IOException {
+	public  void initlogouttest()  {
+
+        try {
 		long startTime = System.currentTimeMillis();
-		testLogin();
-		long endTime = System.currentTimeMillis();
+            testLogout();
+        long endTime = System.currentTimeMillis();
 		System.out.println("  " + (double) ((endTime) - (startTime)) / 1000
 				+ "s");
 
@@ -25,48 +25,52 @@ public class RunLogout {
 		SystemTesting.writeWeb.createTestSection("Failures:<br>"
 				+ resultClass.getInstance().getMap().toString());
 		SystemTesting.writeWeb.endTest();
+        } catch (InterruptedException e) {
+            System.err.println("Logout failed");
+        } catch (IOException e) {
+            System.err.println("Logout failed");
+        }
 	}
 
 	/**
 	 * Start the login tests
 	 * 
-	 * @throws Exception
 	 */
 
-	private static void testLogin() throws Exception {
-		TestLogout[] objs = new TestLogout[Values.NTHREADS];
-		for (int i = 0; i < objs.length; i++) {
-			objs[i] = new TestLogout();
+	private  void testLogout() throws InterruptedException, IOException {
+		float percent;
+		TestLogout[] threads = new TestLogout[Values.NTHREADS];
+		for (int i = 0; i < threads.length; i++) {
+			threads[i] = new TestLogout();
 		}
-		for (Thread thread : objs) {
+		for (Thread thread : threads) {
 			thread.start();
 			Thread.sleep(20);
 		}
-		for (Thread thread : objs) {
+		for (Thread thread : threads) {
 			thread.join();
 		}
-		float per;
 		if (Values.logouttot != 0) {
-			per = (float) Values.logoutacc / (float) Values.logouttot * 100;
+			percent = (float) Values.logoutacc / (float) Values.logouttot * 100;
 
 		} else {
-			per = 0;
+			percent = 0;
 		}
-		System.out.print("logout succ tests: " + Values.logoutacc
-				+ "  tot tests : " + Values.logouttot + "   percent:" + per);
+		System.out.print("logout success: " + Values.logoutacc
+                + "  tot tests : " + Values.logouttot + "   percent:" + percent+"%");
 
 		SystemTesting.writeWeb
 				.createTestSection("Test: Logout "
-						+ Values.NTHREADS
-						+ " Thread * "
-						+ Values.NLOOPS
-						+ " [Random Unames/Password]<br>Test info:"
-						+ "Trying to Logout, checking if server response with response code: 200<br> Test date: "
-						+ pvt14servertest.SystemTesting.dateFormat
-								.format(pvt14servertest.SystemTesting.date)
-						+ "<br><br>");
+                        + Values.NTHREADS
+                        + " Thread * "
+                        + Values.NLOOPS
+                        + " [Random Unames/Password]<br>Test info:"
+                        + "Trying to Logout, checking if server response with response code: 200<br> Test date: "
+                        + pvt14servertest.SystemTesting.dateFormat
+                        .format(pvt14servertest.SystemTesting.date)
+                        + "<br><br>");
 
-		SystemTesting.writeWeb.writeToHTML((int) per);
+		SystemTesting.writeWeb.writeToHTML((int) percent);
 
 	}
 

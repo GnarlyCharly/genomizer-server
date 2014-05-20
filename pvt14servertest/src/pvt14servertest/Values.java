@@ -20,8 +20,17 @@ public class Values {
     public static volatile int addannoacc;
     public static volatile int delannotot;
     public static volatile int delannoacc;
+    public static volatile int dlfileacc;
+    public static volatile int dlfiletot;
     public final static int NTHREADS = 1;
     public final static int NLOOPS = 1;
+
+    public static synchronized void incdlfiletot() {
+        dlfiletot++;
+    }
+    public static synchronized void incdlfileacc() {
+        dlfileacc++;
+    }
 
     public static synchronized void incaddannotot() {
         addannotot++;
