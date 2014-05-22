@@ -29,8 +29,8 @@ public class TestLogin extends Thread {
 		try {
 
 			HttpURLConnection con = initConnection();
-			String json_output =   new JsonBuild().property("username", uname).
-                    property("password", pass).build().toString();
+			String json_output =   new JsonBuild().property("username", "epicon").
+                    property("password", "umea@2014").build().toString();
 			sendData(con, json_output);
 
 			int responseCode = con.getResponseCode();

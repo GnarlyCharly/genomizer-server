@@ -3,6 +3,7 @@ package pvt14servertest;
 import annotations.RunAddAnnotation;
 import annotations.RunDelAnnotation;
 import annotations.RunGetAnnotations;
+import com.sun.org.apache.xpath.internal.SourceTree;
 import experiment.RunDeleteExperiment;
 import experiment.RunSendExperiment;
 import filetransfer.RunTestDownload;
@@ -11,6 +12,7 @@ import loginlogout.RunLoginFail;
 import loginlogout.RunLogout;
 import search.RunSearch;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -18,7 +20,7 @@ import java.text.SimpleDateFormat;
 public class SystemTesting {
     public static Token token;
     public static final int PORT = 7000;
-    public static final String server = "http://itchy.cs.umu.se:";
+    public static final String server = "http://scratchy.cs.umu.se:";
     public static final String htmlfile = "/home/c08/c08esn/testres.html";
 
     public static ToWeb writeWeb;
@@ -44,7 +46,8 @@ public class SystemTesting {
 
     public static AddedFields addedfields = new AddedFields();
 
-    public static void main(String args[]) throws Exception {
+    public static void main(String args[]) throws IOException {
+        System.out.println("Running tests on: " + server + ":" + PORT);
         dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         date = new Date(System.currentTimeMillis());
         writeWeb = new ToWeb();
@@ -54,7 +57,7 @@ public class SystemTesting {
 
     }
 
-    private static void runtests() throws  Exception {
+    private static void runtests()  {
         runlogin.initlogintest();
         betweenTest();
         runloginfail.initloginfailtest();
@@ -63,18 +66,18 @@ public class SystemTesting {
         betweenTest();
         rungetannotations.initannotest();
         betweenTest();
-        runsendexp.initsendexptest();
-        betweenTest();
-        rundelexp.initdeleteexptest();
-        betweenTest();
-       runsearch.initsearchtest();
-        betweenTest();
-        runsendannotations.initaddannotest();
-        betweenTest();
-        rundelannotations.initdelannotest();
-        betweenTest();
-        //Requires runsearch
-       runTestDownload.initdownloadtest();
+//        runsendexp.initsendexptest();
+//        betweenTest();
+//        rundelexp.initdeleteexptest();
+//        betweenTest();
+//       runsearch.initsearchtest();
+//        betweenTest();
+//        runsendannotations.initaddannotest();
+//        betweenTest();
+//        rundelannotations.initdelannotest();
+//        betweenTest();
+//        //Requires runsearch
+//       runTestDownload.initdownloadtest();
 
     }
 

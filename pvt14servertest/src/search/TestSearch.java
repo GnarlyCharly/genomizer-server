@@ -19,7 +19,7 @@ public class TestSearch extends Thread {
 
 	public static boolean sendSearchRequest() throws Exception {
 		Token t = dl.login();
-		String query = URLEncoder.encode("TestExperiment[ExpID]", "UTF-8");
+		String query = URLEncoder.encode("Female[Sex]", "UTF-8");
 		String url = SystemTesting.server + SystemTesting.PORT
 				+ "/search/?annotations=" + query;
 		URL obj = new URL(url);

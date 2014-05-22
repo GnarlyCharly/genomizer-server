@@ -23,7 +23,7 @@ public class Values {
     public static volatile int dlfileacc;
     public static volatile int dlfiletot;
     public final static int NTHREADS = 1;
-    public final static int NLOOPS = 1;
+    public final static int NLOOPS = 2;
 
     public static synchronized void incdlfiletot() {
         dlfiletot++;

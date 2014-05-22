@@ -20,8 +20,8 @@ public class DummyLogin {
         HttpURLConnection con;
         try {
             con = initConnection();
-            String json_output = new JsonBuild().property("username", randomtext()).
-                    property("password", randomtext()).build().toString();
+            String json_output = new JsonBuild().property("username", "epicon").
+                    property("password","umea@2014").build().toString();
             sendData(con, json_output);
             BufferedReader in = new BufferedReader(new InputStreamReader(
                     con.getInputStream()));

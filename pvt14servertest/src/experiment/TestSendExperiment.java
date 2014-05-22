@@ -81,7 +81,7 @@ public class TestSendExperiment extends Thread {
 		}
 		in.close();
 
-		return (responseCode==200);
+		return (responseCode==201);
 	}
 
 }
