@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat;
 public class SystemTesting {
     public static Token token;
     public static final int PORT = 7000;
-    public static final String server = "http://scratchy.cs.umu.se:";
+    public static final String server = "http://itchy.cs.umu.se:";
     public static final String htmlfile = "/home/c08/c08esn/testres.html";
 
     public static ToWeb writeWeb;

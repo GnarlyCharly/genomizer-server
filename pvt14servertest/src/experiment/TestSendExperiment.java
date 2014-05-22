@@ -36,7 +36,6 @@ public class TestSendExperiment extends Thread {
 					if (sendAddExperiment(props))
 						Values.incsendexpacc();
 				} catch (Exception e) {
-                    e.printStackTrace();
 					resultClass.getInstance().addError(e.getMessage());
 				}
 			}
