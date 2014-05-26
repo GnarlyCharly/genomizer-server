@@ -9,7 +9,7 @@ import com.google.gson.annotations.Expose;
 import database.DatabaseAccessor;
 import database.Genome;
 import database.MaxSize;
-
+import database.constants.MaxSize;
 import response.AddGenomeReleaseResponse;
 import response.ErrorResponse;
 import response.Response;

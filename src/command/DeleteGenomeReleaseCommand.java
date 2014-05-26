@@ -3,10 +3,11 @@ package command;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import database.DatabaseAccessor;
 import database.Genome;
-import database.MaxSize;
+import database.constants.MaxSize;
 import response.DeleteGenomeReleaseResponse;
 import response.ErrorResponse;
 import response.Response;
@@ -72,8 +73,8 @@ public class DeleteGenomeReleaseCommand extends Command {
 
 		try {
 			db = initDB();
-			ArrayList<Genome> releases = (ArrayList<Genome>) db.getAllGenomReleases();
-			for(Genome g: releases) {
+			List<database.containers.Genome> releases = db.getAllGenomReleases();
+			for(database.containers.Genome g: releases) {
 				if(g.genomeVersion.equals(this.genomeVersion) && g.species.equals(this.specie)) {
 					boolean result = db.removeGenomeRelease(genomeVersion);
 					if(result) {
