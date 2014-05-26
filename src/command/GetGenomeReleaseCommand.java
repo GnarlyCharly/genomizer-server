@@ -59,7 +59,9 @@ public class GetGenomeReleaseCommand extends Command{
 		} catch (SQLException | IOException e) {
 			return new ErrorResponse(StatusCode.SERVICE_UNAVAILABLE, "SQLException - Could not create connection to database: " + e.getMessage());
 		} finally {
-			db.close();
+			if(db.isConnected()) {
+				db.close();
+			}
 		}
 	}
 

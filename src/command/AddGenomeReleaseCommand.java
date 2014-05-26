@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import com.google.gson.annotations.Expose;
 
 import database.DatabaseAccessor;
+import database.Genome;
 import database.MaxSize;
 
 import response.AddGenomeReleaseResponse;
@@ -17,8 +18,8 @@ import response.StatusCode;
 /**
  * Class used to handle adding a genome release.
  *
- * @author tfy09jnn
- * @version 1.0
+ * @author tfy09jnn, Hugo Källström
+ * @version 1.1
  */
 public class AddGenomeReleaseCommand extends Command {
 
@@ -76,6 +77,13 @@ public class AddGenomeReleaseCommand extends Command {
 
 		try {
 			db = initDB();
+			ArrayList<Genome> releases = (ArrayList<Genome>) db.getAllGenomReleases();
+			
+			
+			Genome rel = releases.get(0);
+			rel.genomeVersion.equals(this.genomeVersion);
+			
+			
 			for(String fileName: files) {
 				 uploadURLs.add(db.addGenomeRelease(genomeVersion, specie, fileName));
 			}

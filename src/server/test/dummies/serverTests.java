@@ -14,13 +14,8 @@ public class serverTests {
 //			Process.sendGetProcessStatus();
 		//Annotations.sendDeleteAnnotation("Test43???");
 		//Annotations.sendDeleteAnnotation("JONAS???");
-		Annotations.sendGetAnnotationInformation();
 
-
-		Process.sendRawToProfile();
-//		GenomeRelease.sendAddGenomeRelease("HumanitariumTest");
-
-
+		genometest();
 		Login.logout();
 	}
 
@@ -39,8 +34,8 @@ public class serverTests {
 
 	public static void usertests() throws Exception {
 		User.sendDeleteUser("c11jmm");
-		User.sendCreateUser("c11jmm", "bajs", "minion", "Jonas Erik Markström", "c11jmm@cs.umu.se");
-		User.sendCreateUser("c11jmm", "bajs", "minion", "Jonas Erik Markström", "c11jmm@cs.umu.se"); // Trying to create duplicate user, should give error.
+		User.sendCreateUser("c11jmm", "bajs", "minion", "Jonas Erik Markstrï¿½m", "c11jmm@cs.umu.se");
+		User.sendCreateUser("c11jmm", "bajs", "minion", "Jonas Erik Markstrï¿½m", "c11jmm@cs.umu.se"); // Trying to create duplicate user, should give error.
 		Administrator.sendUpdateUserPrivileges("c11jmm", "basic");
 		Administrator.sendUpdateUserPrivileges("c11jmm2", "mastah"); // User does not exist, should return error code.
 		User.sendDeleteUser("c11jmm");
@@ -70,6 +65,9 @@ public class serverTests {
 		GenomeRelease.sendGetGenomeRelease();
 		GenomeRelease.sendAddGenomeRelease("Fly");
 		GenomeRelease.sendGetGenomeReleaseSpecies("Fly");
+		GenomeRelease.sendDeleteGenomeReleaseSpecies("Fly", "new");
+		GenomeRelease.sendGetGenomeReleaseSpecies("Fly");
+		GenomeRelease.sendGetGenomeRelease();
 	}
 
 	public static void processtest() throws Exception {

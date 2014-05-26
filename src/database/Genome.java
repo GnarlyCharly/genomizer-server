@@ -55,4 +55,5 @@ public class Genome {
         }
         return fileName.substring(0, indexOfFirstDot);
     }
+  
 }

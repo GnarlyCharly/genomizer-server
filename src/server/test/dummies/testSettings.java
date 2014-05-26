@@ -11,8 +11,8 @@ public class testSettings {
 
 
 
-	public static String host = "localhost";
-//	public static String host = "scratchy.cs.umu.se";
+//	public static String host = "localhost";
+	public static String host = "scratchy.cs.umu.se";
 
 
 	public static String url = "http://" + host + ":" + port;

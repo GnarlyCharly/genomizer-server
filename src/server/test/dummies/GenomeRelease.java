@@ -65,8 +65,8 @@ public class GenomeRelease {
 		System.out.println("Response Body: " +testSettings. printResponse(con));
 	}
 
-	static void sendDeleteGenomeReleaseSpecies(String specie) throws Exception {
-		URL obj = new URL(testSettings.url + "/genomeRelease/" + specie + "/hx16");
+	static void sendDeleteGenomeReleaseSpecies(String specie, String version) throws Exception {
+		URL obj = new URL(testSettings.url + "/genomeRelease/" + specie + "/" + version);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
 		con.setRequestMethod("DELETE");
