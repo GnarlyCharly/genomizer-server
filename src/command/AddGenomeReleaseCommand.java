@@ -77,17 +77,11 @@ public class AddGenomeReleaseCommand extends Command {
 
 		try {
 			db = initDB();
-			ArrayList<Genome> releases = (ArrayList<Genome>) db.getAllGenomReleases();
-			
-			
-			Genome rel = releases.get(0);
-			rel.genomeVersion.equals(this.genomeVersion);
-			
-			
 			for(String fileName: files) {
-				 uploadURLs.add(db.addGenomeRelease(genomeVersion, specie, fileName));
+				uploadURLs.add(db.addGenomeRelease(genomeVersion, specie, fileName));
 			}
 			return new AddGenomeReleaseResponse(StatusCode.CREATED, uploadURLs);
+			
 		} catch (SQLException | IOException e) {
 				return new ErrorResponse(StatusCode.BAD_REQUEST, e.getMessage());
 		} finally {

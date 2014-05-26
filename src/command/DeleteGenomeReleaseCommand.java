@@ -2,8 +2,10 @@ package command;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import database.DatabaseAccessor;
+import database.Genome;
 import database.MaxSize;
 import response.DeleteGenomeReleaseResponse;
 import response.ErrorResponse;
@@ -13,8 +15,8 @@ import response.StatusCode;
 /**
  * Class used to delete a genome release.
  *
- * @author tfy09jnn
- * @version 1.0
+ * @author tfy09jnn, Hugo Källström
+ * @version 1.1
  */
 public class DeleteGenomeReleaseCommand extends Command {
 
@@ -70,13 +72,20 @@ public class DeleteGenomeReleaseCommand extends Command {
 
 		try {
 			db = initDB();
-			System.out.println(genomeVersion);
-			boolean result = db.removeGenomeRelease(genomeVersion);
-			if(result) {
-				return new DeleteGenomeReleaseResponse(StatusCode.OK);
-			} else {
-				return new ErrorResponse(StatusCode.BAD_REQUEST, "Removeing did not work.");
+			ArrayList<Genome> releases = (ArrayList<Genome>) db.getAllGenomReleases();
+			for(Genome g: releases) {
+				if(g.genomeVersion.equals(this.genomeVersion) && g.species.equals(this.specie)) {
+					boolean result = db.removeGenomeRelease(genomeVersion);
+					if(result) {
+						return new DeleteGenomeReleaseResponse(StatusCode.OK);
+					} else {
+						return new ErrorResponse(StatusCode.BAD_REQUEST, "Removeing did not work.");
+					}
+				}
 			}
+			
+			return new ErrorResponse(StatusCode.BAD_REQUEST, "The version " + genomeVersion + " or the species " + specie + " does not exist.");
+	
 		} catch (SQLException | IOException e) {
 			return new ErrorResponse(StatusCode.BAD_REQUEST, e.getMessage());
 		} finally {

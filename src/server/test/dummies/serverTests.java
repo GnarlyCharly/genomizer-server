@@ -14,8 +14,9 @@ public class serverTests {
 //			Process.sendGetProcessStatus();
 		//Annotations.sendDeleteAnnotation("Test43???");
 		//Annotations.sendDeleteAnnotation("JONAS???");
-
 		genometest();
+		//Process.sendRawToProfile();
+//		GenomeRelease.sendAddGenomeRelease("HumanitariumTest");
 		Login.logout();
 	}
 
