@@ -56,6 +56,7 @@ public class AddNewFileTests {
         ft = dbac.addNewFile(testExpId, testFileType, testFileName,
                 testInputFileName, testMetaData, testAuthor, testUploader,
                 testIsPrivate, null);
+        dbac.fileReadyForDownload(ft.id);
     }
 
     @After
@@ -77,7 +78,6 @@ public class AddNewFileTests {
 
         String expectedFilePath = fpg.generateFilePath(testExpId,
                 testFileType, testFileName);
-        System.out.println(expectedFilePath);
 
         FileTuple ft = dbac.getFileTuple(expectedFilePath);
 
@@ -95,6 +95,9 @@ public class AddNewFileTests {
         ft = dbac.addNewFile(testExpId, testFileType, testFileName,
                 testInputFileName, testMetaData, testAuthor, testUploader,
                 testIsPrivate, null);
+        
+        dbac.fileReadyForDownload(ft.id);
+        
         ft = dbac.getFileTuple(expectedFilePath);
         assertEquals(expectedFilePath, ft.path);
 

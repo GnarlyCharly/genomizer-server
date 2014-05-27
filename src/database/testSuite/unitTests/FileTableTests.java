@@ -49,9 +49,8 @@ public class FileTableTests {
     @BeforeClass
     public static void setupTestCase() throws Exception {
 
-        dbac = new DatabaseAccessor(TestInitializer.username,
-                TestInitializer.password, TestInitializer.host,
-                TestInitializer.database);
+        ti = new TestInitializer();
+        dbac = ti.setupWithoutAddingTuples();
 
         testFolderPath = System.getProperty("user.home") + File.separator
                 + testFolderName + File.separator;
@@ -64,39 +63,34 @@ public class FileTableTests {
 
         fpg = dbac.getFilePathGenerator();
         fpg.setRootDirectory(testFolderPath);
-
-        dbac.addExperiment(testExpId);
-
-        ti = new TestInitializer();
     }
 
 
     @AfterClass
     public static void undoAllChanges() throws Exception {
-
-        if (dbac.hasFile(ft.id)) {
-            dbac.deleteFile(ft.id);
-        }
-        dbac.deleteExperiment(testExpId);
-        dbac.close();
         ti.recursiveDelete(testFolder);
+        ti.removeTuples();
     }
 
 
     @Before
     public void setup() throws SQLException, IOException {
 
+        dbac.addExperiment(testExpId);
+
         ft = dbac.addNewFile(testExpId, testFileType, testName, testInputFile,
                 testMetaData, testAuthor, testUploader, testIsPrivate,
                 testGRVersion);
+
         addMockFile(ft.getParentFolder(), ft.filename);
+        dbac.fileReadyForDownload(ft.id);
     }
 
 
     @After
     public void teardown() throws Exception {
 
-        dbac.deleteFile(ft.path);
+        ti.removeTuplesKeepConnection();
     }
 
 
@@ -114,6 +108,7 @@ public class FileTableTests {
         FileTuple ft = dbac.addNewFile(testExpId, testFileType, testName,
                 testInputFile, testMetaData, testAuthor, testUploader,
                 testIsPrivate, testGRVersion);
+        dbac.fileReadyForDownload(ft.id);
         e = dbac.getExperiment(testExpId);
         assertEquals(1, e.getFiles().size());
 
@@ -192,10 +187,10 @@ public class FileTableTests {
     @Test
     public void shouldBeInProgressAfterAddition() throws Exception {
 
-        Experiment e = dbac.getExperiment(testExpId);
-        ft = e.getFiles().get(0);
+        dbac.addExperiment("in progress");
+        FileTuple inProgressFT = dbac.addNewFile("in progress", testFileType, testName, testInputFile, testMetaData, testAuthor, testUploader, testIsPrivate, null);
 
-        assertEquals("In Progress", ft.status);
+        assertEquals("In Progress", inProgressFT.status);
     }
 
 
@@ -221,6 +216,7 @@ public class FileTableTests {
         File temp1 = new File(fileStore.path);
         temp1.createNewFile();
         assertTrue(temp1.exists());
+        dbac.fileReadyForDownload(fileStore.id);
 
         List<Experiment> res = dbac.search("Claes[Uploader]");
         int rowCount = dbac.changeFileName(res.get(0).getFiles().get(0).id,

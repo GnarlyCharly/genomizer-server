@@ -268,6 +268,8 @@ public class MockUserTests {
         FileTuple ft = dbac.addNewFile("my first experiment",
                 FileTuple.RAW, "rawFile.fastq", "rawInput.fasta",
                 null, "Umu", "Ruaridh", false, null);
+        
+        dbac.fileReadyForDownload(ft.id);
 
         String expectedRawFileUploadURL = ServerDependentValues.UploadURL
                 + testFolderPath

@@ -257,6 +257,7 @@ public class ExperimentTests {
 		ft = dbac.addNewFile(testExpId2, testFileType, testName, testInputFile,
 		  		testMetaData, testAuthor, testUploader, testIsPrivate,
 		  		testGRVersion);
+		dbac.fileReadyForDownload(ft.id);
     	fpg.generateExperimentFolders(testExpId2);
 		addMockFile(ft.getParentFolder(), testName);
 		dbac.deleteExperiment(testExpId2);

@@ -256,7 +256,7 @@ public class ExperimentMethods {
      */
     public Experiment fillFiles(Experiment e) throws SQLException {
 
-        String query = "SELECT * FROM File " + "WHERE ExpID ~~* ?";
+        String query = "SELECT * FROM File " + "WHERE ExpID ~~* ? AND Status ~~* 'Done'";
         PreparedStatement stmt = conn.prepareStatement(query);
         stmt.setString(1, e.getID());
         ResultSet rs = stmt.executeQuery();
