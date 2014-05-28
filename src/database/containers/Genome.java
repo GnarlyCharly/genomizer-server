@@ -20,7 +20,9 @@ public class Genome {
         folderPath = resSet.getString("FolderPath");
         files = new ArrayList<String>();
         do {
-            files.add(resSet.getString("FileName"));
+            if (resSet.getString("Status").equalsIgnoreCase("Done")) {
+                files.add(resSet.getString("FileName"));
+            }
         } while (resSet.next() && resSet.getString("Version").equals(genomeVersion));
     }
 

@@ -320,6 +320,8 @@ public class MockUserTests {
                 + "hg38.fasta";
 
         assertEquals(expectedUploadURL, uploadURL);
+        
+        dbac.genomeReleaseFileUploaded("hg38", "hg38.fasta");
 
         Genome g = dbac.getGenomeRelease("hg38");
 
@@ -397,6 +399,8 @@ public class MockUserTests {
                 + "hg38.2.fasta";
 
         assertEquals(expectedUploadURL, uploadURL);
+        
+        dbac.genomeReleaseFileUploaded("hg38", "hg38.2.fasta");
     }
 
     @Test

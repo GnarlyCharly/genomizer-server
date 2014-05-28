@@ -74,6 +74,7 @@ public class GenomeReleaseTableTests {
         assertNull(g);
 
         dbac.addGenomeRelease("hg19", "Human", "hg19.txt");
+        dbac.genomeReleaseFileUploaded("hg19", "hg19.txt");
         g = dbac.getGenomeRelease("hg19");
         assertEquals("hg19", g.genomeVersion);
     }
@@ -139,6 +140,7 @@ public class GenomeReleaseTableTests {
     @Test
     public void shouldReturnFileName() throws Exception {
         dbac.addGenomeRelease("rn50", "Rat", "aRatFile.fasta");
+        dbac.genomeReleaseFileUploaded("rn50", "aRatFile.fasta");
         Genome genome = dbac.getGenomeRelease("rn50");
 
         assertEquals(1, genome.getFiles().size());
@@ -213,6 +215,7 @@ public class GenomeReleaseTableTests {
     @Test
     public void shouldGetFilePrefixForComplexFileNames() throws Exception {
         dbac.addGenomeRelease("rua888", "Superhero", "superheroRua888.ping.pong");
+        dbac.genomeReleaseFileUploaded("rua888", "superheroRua888.ping.pong");
         Genome g = dbac.getGenomeRelease("rua888");
         assertEquals("superheroRua888", g.getFilePrefix());
     }

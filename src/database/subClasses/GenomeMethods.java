@@ -109,7 +109,7 @@ public class GenomeMethods {
 
         if (genomeReleaseFileExists(genomeVersion, filename)) {
             throw new IOException(filename
-                    + " already exists for this genome release!");
+                    + " already (being) uploaded!");
         }
 
         String query2 = "INSERT INTO Genome_Release_Files "
@@ -129,24 +129,16 @@ public class GenomeMethods {
     private boolean genomeReleaseFileExists(String genomeVersion,
             String filename) throws SQLException {
 
-        Genome g = getGenomeRelease(genomeVersion);
-        if (g == null) {
-            return false;
-        }
-        if (inCaseSensitiveSearch(filename, g.getFiles()) != null) {
-            return true;
-        }
-        return false;
-    }
+        String query = "SELECT * FROM Genome_Release_files " +
+        		"WHERE Version ~~* ? AND FileName ~~* ?";
 
-    private String inCaseSensitiveSearch(String target,
-            List<String> list) {
-        for (String s: list) {
-            if (s.equalsIgnoreCase(target)) {
-                return s;
-            }
-        }
-        return null;
+        PreparedStatement ps = conn.prepareStatement(query);
+        ps.setString(1, genomeVersion);
+        ps.setString(2, filename);
+
+        ResultSet rs = ps.executeQuery();
+
+        return rs.next();
     }
 
 	/**
@@ -247,7 +239,7 @@ public class GenomeMethods {
         String query = "SELECT * FROM Genome_Release "
                 + "JOIN Genome_Release_Files "
                 + "ON (Genome_Release.Version = Genome_Release_Files.Version) "
-                + "WHERE (Genome_Release.Species ~~* ?) ORDER BY Genome_Release.Version";
+                + "WHERE (Genome_Release.Species ~~* ? AND Status ~~* 'Done') ORDER BY Genome_Release.Version";
 
 		PreparedStatement stmt = conn.prepareStatement(query);
 		stmt.setString(1, species);
@@ -434,7 +426,9 @@ public class GenomeMethods {
 	 *             - if the query does not succeed
 	 */
 	public List<String> getAllGenomReleaseSpecies() throws SQLException {
-		String query = "SELECT DISTINCT Species FROM Genome_Release";
+		String query = "SELECT DISTINCT Species FROM Genome_Release " +
+				"NATURAL JOIN Genome_Release_Files " +
+				"WHERE Status = 'Done'";
 		Statement stmt = conn.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
 		List<String> species = new ArrayList<String>();
@@ -454,7 +448,8 @@ public class GenomeMethods {
 	 */
 	public List<Genome> getAllGenomReleases() throws SQLException {
 		String query = "SELECT * FROM Genome_Release "
-				+ "NATURAL JOIN Genome_Release_Files ";
+				+ "NATURAL JOIN Genome_Release_Files " +
+				"WHERE Status ~~* 'Done'";
 
 		PreparedStatement stmt = conn.prepareStatement(query);
 		ResultSet rs = stmt.executeQuery();
