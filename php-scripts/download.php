@@ -11,6 +11,7 @@ header('Access-Control-Allow-Headers: Authorization', false);
 #Path to the file to download
 $URI = $_GET['path'];
 
+echo $URI;
 $headers = apache_request_headers();
 
 #Gets the token, either as a header or a parameter.
@@ -74,21 +75,43 @@ function validate_file_path($file_path){
         }
 }
 
+#Get info for connection to the DB from a file
+#'settings.cfg' that haveto be placed in the same folder as the script.
+function connect_to_db(){
+        $file = file_get_contents('settings.cfg', true);
+        $dbinfo = explode("\n", $file);
+
+        for($i = 0; $i < 4; $i++){
+                switch(strtolower(trim(explode("=", $dbinfo[$i])[0]))) {
+                        case "databaseuser":
+                                $user = trim(explode("=", $dbinfo[$i])[1]);
+                                break;
+                        case "databasepassword":
+                                $pass = trim(explode("=", $dbinfo[$i])[1]);
+                                break;
+                        case "databasehost":
+                                $host = explode(":", trim(explode("=", $dbinfo[$i])[1]))[0];
+                                $port = explode(":", trim(explode("=", $dbinfo[$i])[1]))[1];
+                                break;
+                        case "databasename":
+                                $db = trim(explode("=", $dbinfo[$i])[1]);
+                                break;
+                        default:
+                                break;
+		}
+	}
+
+	$dbh = new PDO("pgsql:dbname=$db;host=$host;port=$port", $user, $pass);
+	return $dbh;
+
+
+}
+
 #Checks if a given path is present in the database.
 function validate_path_db($file_path, $path){
-	#Get info for connection to the DB from a file
-	#'dbconfig' that haveto be placed in the root folder.
-	$file = file_get_contents('settings.cfg', true);
-	$dbinfo = explode("=", $file);
-	$user = trim(explode("\n", $dbinfo[1])[0]);
-	$pass = trim(explode("\n", $dbinfo[2])[0]);
-	$host = trim(explode(":", explode("\n", $dbinfo[3])[0])[0]);
-	$port = trim(explode(":", explode("\n", $dbinfo[3])[0])[1]);
-	$db = trim(explode("\n", $dbinfo[4])[0]);
 
 	#Connect to the database
-	$dbh = new PDO("pgsql:dbname=$db;host=$host;port=$port", $user, $pass);
-
+	$dbh = connect_to_db();
 	#Check file path
 	$stmt = $dbh->prepare("SELECT path FROM file WHERE path=? AND status='Done'");
 	$stmt->bindParam(1, $param);
@@ -136,7 +159,7 @@ function validate_path_db($file_path, $path){
 #Help function for logging stuff in the script
 function log_var($variable) {
 
-        $log_file = 'variable_log2.txt';
+        $log_file = 'log2_variable.txt';
 
         $current_log = file_get_contents($log_file);
 
