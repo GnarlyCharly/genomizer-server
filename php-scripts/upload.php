@@ -13,7 +13,6 @@ $access = auth_user($headers['Authorization']);
 
 #Start uploading if user exist in the database with the correct password
 if($access == 200) {
-#	echo "authed uploading file..\n";
 	upload_file($access);
 } else {
 	echo "ERROR: Access denied!\n";
@@ -42,11 +41,6 @@ function upload_file($access) {
 #	echo "Target path=" .   $target_path . "\n";
 #	echo "Size=" .          $_FILES['uploadfile']['size'] . "\n";
 
-	$success = FALSE;
-
-	log_var("upload path uri: " . $target_path . " path: " . $destination_path . "\n");
-
-
 	$filetype = validate_path_db($target_path, $destination_path);
 
 	#Validates the given filepath.
@@ -55,11 +49,8 @@ function upload_file($access) {
 		http_response_code(403);
 	#Upload(move) the file to the correct folder
 	} else if(move_uploaded_file($_FILES['uploadfile']['tmp_name'], $target_path)) {
-		$success = TRUE;
 		echo "The file " .  $file_name .
 			" has been uploaded successfully\n";
-		#log upload
-		log_activity($_GET['path']);
 		if($filetype == "file"){
 			change_to_done($target_path, $file_name, $filetype);
 		} else {
@@ -70,12 +61,6 @@ function upload_file($access) {
 		echo "ERROR: Failed to move temp-file to upload location\n";
 		http_response_code(403);
 	}
-
-#	if(!$success) {
-		#send_delete($_GET['path'], $access);
-#		echo "Failed to upload file\n";	
-#		http_response_code(403);
-#	}
 }
 
 #Checks if the file has a file-type extension (DEPRECATED).
@@ -172,11 +157,10 @@ function change_to_done($file_path, $filename, $type){
 
 	$stmt->execute();
 	$row = $stmt->fetch();
-	
-#	log_var("sql response: " . $row[0]);
 }
 
-#Sends a delete request to the server to delete a file from the DB
+#Sends a delete request to the server to delete a file from the DB(DEPRECATED: Is never called if
+# file transfer is canceled.)
 function send_delete($file_path, $token) {
 
 	$ch = curl_init();
@@ -188,8 +172,6 @@ function send_delete($file_path, $token) {
 	$response = curl_exec($ch);
 	$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 	curl_close($ch);
-	log_var($response);
-	log_var($status);
 
 }
 
@@ -217,8 +199,6 @@ function auth_user($token){
 	$response = curl_exec($ch);
 	$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 	curl_close($ch);
-
-	log_var("auth: " . $status);
 
 	return $status;
 }
@@ -270,8 +250,6 @@ function validate_path_db($file_path, $path){
 
 	#Close connection
 	$dbh = null;
-
-	log_var("filetype: " . $row[0] . " or " . $row2[0] . " or " . $row3[0] . "\n");
 
 	#Return true if the file path was found in the DB.
 	if($row[0] == $file_path){
