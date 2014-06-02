@@ -1,4 +1,4 @@
-package command;
+package src.command;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import database.FileTuple;
 /**
  * Class used to retrieve an experiment.
  *
- * @author tfy09jnn, Hugo Källström
+ * @author tfy09jnn, Hugo Kï¿½llstrï¿½m
  * @version 1.1
  */
 public class GetExperimentCommand extends Command {

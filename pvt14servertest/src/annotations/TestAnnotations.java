@@ -1,5 +1,6 @@
 package annotations;
 
+import pvt14servertest.DummyLogin;
 import pvt14servertest.SystemTesting;
 import pvt14servertest.Token;
 import pvt14servertest.Values;
@@ -14,7 +15,7 @@ import java.util.Arrays;
 
 public class TestAnnotations implements Runnable {
 
-    public static Token token;
+	private DummyLogin dummyLogin = new DummyLogin();
 
     private static BufferedReader in;
 
@@ -25,7 +26,7 @@ public class TestAnnotations implements Runnable {
     private static int responseCode;
 
     public TestAnnotations() {
-        token = new Token("a01c9b9d-283a-4bcc-b0ee-96f7c9cef4fd");
+     
 
     }
 
@@ -34,16 +35,16 @@ public class TestAnnotations implements Runnable {
     }
 
 
-    @SuppressWarnings({"EmptyCatchBlock", "StringBufferMayBeStringBuilder"})
+    @SuppressWarnings({"EmptyCatchBlock"})
     public boolean getAnnotations() throws IOException {
 
         HttpURLConnection con = initConnection();
-
+        
         responseCode = con.getResponseCode();
 
         in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String inputLine;
-        StringBuffer responseBuffer = new StringBuffer();
+        StringBuilder responseBuffer = new StringBuilder();
 
         while ((inputLine = in.readLine()) != null) {
             responseBuffer.append(inputLine);
@@ -51,7 +52,6 @@ public class TestAnnotations implements Runnable {
         in.close();
 
         response = responseBuffer.toString();
-
         response = response.replaceAll(",","");
         //needed to find out how many notations there is.
         String[] split1 = response.split("\\}");
@@ -80,8 +80,7 @@ public class TestAnnotations implements Runnable {
 
         con.setRequestMethod("GET");
 
-        con.setRequestProperty("Content-Type", "application/json");
-        con.setRequestProperty("Authorization", token.getToken());
+        con.setRequestProperty("Authorization", dummyLogin.login().getToken());
 
         return con;
     }

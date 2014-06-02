@@ -1,4 +1,4 @@
-package command;
+package src.command;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -14,7 +14,7 @@ import server.DatabaseSettings;
 /**
  * Class used to represent a remove experiment command.
  *
- * @author tfy09jnn, Hugo Källström
+ * @author tfy09jnn, Hugo Kï¿½llstrï¿½m
  * @version 1.1
  */
 public class DeleteExperimentCommand extends Command {

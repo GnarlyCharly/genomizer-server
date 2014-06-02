@@ -17,14 +17,11 @@ public class TestSendExperiment extends Thread {
 
 	private DummyLogin logindummy;
 
-
-
-
 	public TestSendExperiment() {
 		logindummy = new DummyLogin();
 
 		propertyList = new ArrayList<String[]>();
-		propertyList.add(new String[] { "name", "Species", "value", "Human" });
+		propertyList.add(new String[] { "name", "Species", "value", "Fly" });
 	}
 
 	@Override
@@ -64,7 +61,8 @@ public class TestSendExperiment extends Thread {
         annotations.add(new JsonBuild().property("id","1")
                 .property(props[0], props[1]).property(props[2], props[3]).build());
         String json_output = new JsonBuild().property("name", expname)
-                .property("createdBy", "SystemTest").add("annotations", annotations)
+                .property("createdBy", "SystemTest")
+                .add("annotations", annotations)
                 .build().toString();
 
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());

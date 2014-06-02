@@ -1,4 +1,4 @@
-package command;
+package src.command;
 
 import response.MinimalResponse;
 import response.Response;

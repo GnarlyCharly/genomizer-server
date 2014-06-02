@@ -1,4 +1,4 @@
-package command;
+package src.command;
 
 import com.google.gson.annotations.Expose;
 
@@ -6,7 +6,7 @@ import com.google.gson.annotations.Expose;
 
 /**
  * Class used to store annotation.
- * @author tfy09jnn, Hugo Källström
+ * @author tfy09jnn, Hugo Kï¿½llstrï¿½m
  * @version 1.1
  */
 public class Annotation {

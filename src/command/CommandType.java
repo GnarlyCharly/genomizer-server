@@ -1,4 +1,4 @@
-package command;
+package src.command;
 
 public enum CommandType {
 	LOGIN_COMMAND,

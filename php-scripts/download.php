@@ -3,28 +3,28 @@
 #A script to download a file from the server.
 #Auths the user against the DB.
 
+#TODO: Add a trusted site instead of *.
+header('Access-Control-Allow-Origin: *', false);
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE', false);
+header('Access-Control-Allow-Headers: Authorization', false);
+
 #Path to the file to download
 $URI = $_GET['path'];
 
-#Checks if the user has inputed username.
-if (($_SERVER['PHP_AUTH_USER']) == "") {
-        header('WWW-Authenticate: Basic realm="My Realm"');
-        header('HTTP/1.0 401 Unauthorized');
-        echo 'You need to set a user and password.';
-        http_response_code(401);
-        exit;
+$headers = apache_request_headers();
+
+#Gets the token, either as a header or a parameter.
+if($headers['Authorization'] == ""){
+	$access = auth_user($_GET['token']);
 } else {
-#        echo "<p>Hello {$_SERVER['PHP_AUTH_USER']}.</p>\n";
-#        echo "<p>You entered {$_SERVER['PHP_AUTH_PW']} as your password.</p>\n";
-	#Checks the users user-rights.
-        $access = authenticateUser($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+	$access = auth_user($headers['Authorization']);
 }
 
-if($access != "none") {
-	echo "downloading file..\n";
+$path = dirname($URI) . "/";
 
+if($access == 200) {
 	#If the file exists send the file.
-	if (file_exists($URI)) {
+	if (validate_path_db($URI, $path) != "none" AND file_exists($URI)) {
 		header('Content-Description: File Transfer');
 		header('Content-Type: application/octet-stream');
 		header('Content-Disposition: attachment; filename='.basename($URI));
@@ -36,55 +36,138 @@ if($access != "none") {
 		flush();
 		readfile($URI);
 		http_response_code(200);
-		exit;
+		log_activity($URI, $access);
 	} else {
-		echo "File not found.";
-		exit;
+		http_response_code(404);
+		echo "ERROR: File not found.";
 	}
 } else {
-        echo "no access!\n";
+        echo "ERROR: Access denied!\n";
         http_response_code(401);
 }
 
+#Checks if a given token is valid against the server
+function auth_user($token){
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "localhost:7000/token");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Authorization: " . $token));
+        $response = curl_exec($ch);
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
 
-#Authenticates a user and returns the user-rights.
-function authenticateUser($user_name, $pswd) {
+        return $status;
+}
 
-	#TODO: Hide the DB auth info somewhere.
-	$host = "localhost";
-	$port = "60000";
-	$user = "postgres";
-	$pass = "pvt";
-	$db = "Test";
+#Checks if the given path is in /var/www/data/ and that
+#it doesn't contain '..' (DEPRECATED).
+function validate_file_path($file_path){
+        if(substr($file_path, 0, 14) == "/var/www/data/") {
+                if(strpos($file_path, "..") !== FALSE) {
+                        return FALSE;
+                } else {
+                        return TRUE;
+                }
+        } else {
+                return FALSE;
+        }
+}
 
-	#Connects to the DB.
-	$con = pg_connect("host=$host port=$port dbname=$db user=$user
-	         password=$pass")
-	         or die ("Could not connect to dabasase\n");
+#Checks if a given path is present in the database.
+function validate_path_db($file_path, $path){
+	#Get info for connection to the DB from a file
+	#'dbconfig' that haveto be placed in the root folder.
+	$file = file_get_contents('settings.cfg', true);
+	$dbinfo = explode("=", $file);
+	$user = trim(explode("\n", $dbinfo[1])[0]);
+	$pass = trim(explode("\n", $dbinfo[2])[0]);
+	$host = trim(explode(":", explode("\n", $dbinfo[3])[0])[0]);
+	$port = trim(explode(":", explode("\n", $dbinfo[3])[0])[1]);
+	$db = trim(explode("\n", $dbinfo[4])[0]);
 
-	#Query that gets all users from the DB.
-	$query = "SELECT * FROM user_info";
+	#Connect to the database
+	$dbh = new PDO("pgsql:dbname=$db;host=$host;port=$port", $user, $pass);
 
-	#Result of the query.
-	$result = pg_query($con, $query) or die("Cannot execute query: $query\n");
+	#Check file path
+	$stmt = $dbh->prepare("SELECT path FROM file WHERE path=? AND status='Done'");
+	$stmt->bindParam(1, $param);
 
-	#Initial user-rights.
-	$access = "none";
+	$param = $file_path;
+	$stmt->execute();
+	$row = $stmt->fetch();
 
-	#Checks every user in the DB against the suplied username and password.
-	#Then sets the user-rights.
-	while ($row = pg_fetch_row($result)) {
-	        if($user_name == $row[0] && $pswd == $row[1]) {
-	                $access = $row[2];
-	        }
+	#Check genome release path
+	$stmt = $dbh->prepare("SELECT folderpath FROM genome_release NATURAL JOIN genome_release_files 
+				WHERE folderpath=? AND status='Done'");
+	$stmt->bindParam(1, $param);
 
+	$param = $path;
+	$stmt->execute();
+	$row2 = $stmt->fetch();
+
+	#Check chain file path
+	$stmt = $dbh->prepare("SELECT folderpath FROM chain_file NATURAL JOIN chain_file_files 
+				WHERE folderpath=? AND status='Done'");
+	$stmt->bindParam(1, $param);
+
+	$param = $path;
+	$stmt->execute();
+	$row3 = $stmt->fetch();
+
+	#Close connection
+	$dbh = null;
+
+	log_var("db validate: " . $row[0] . " OR " . $row2[0] . " OR " . $row3[0] . "\n");
+
+	#Return true if the file path was found in the DB.
+	if($row[0] == $file_path){
+		return "file";
+	}else if($row2[0] == $path){
+		return "genome";
+	}else if($row3[0] == $path){
+		return "chain";
+	} else {
+		return "none";
 	}
 
-	#Close the DB connection.
-	pg_close($con);
+}
 
-	#Returns the user-rights.
-	return $access;
+#Help function for logging stuff in the script
+function log_var($variable) {
+
+        $log_file = 'variable_log2.txt';
+
+        $current_log = file_get_contents($log_file);
+
+
+        $current_log .= "START LOG: " . date('l jS \of F Y h:i:s A') . "\n";
+        $current_log .= "variable: " . $variable . "\n";
+
+        $current_log .= "END OF LOG\n";
+        file_put_contents($log_file, $current_log);
+
+}
+
+
+function log_activity($filename, $token) {
+        
+        $log_file = 'phplogdownload.txt';
+
+        $current_log = file_get_contents($log_file);
+
+
+        $current_log .= "START LOG: " . date('l jS \of F Y h:i:s A') . "\n";
+        $current_log .= "IP: " . $_SERVER['REMOTE_ADDR'] . "\n";
+        $current_log .= "FORWARD IP: " . $_SERVER['HTTP_X_FORWARDED_FOR'] . "\n";
+        $current_log .= "username: " . $_SERVER['PHP_AUTH_USER'] . "\n";
+        $current_log .= "auth response: " . $token . "\n";
+        $current_log .= "auth token: " . $_SERVER['Authorization'] . "\n";
+
+        $current_log .= "filename: " . $filename . "\n";
+        $current_log .= "END OF LOG\n";
+        file_put_contents($log_file, $current_log);
+
 }
 
 

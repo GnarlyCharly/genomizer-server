@@ -1,4 +1,4 @@
-package command;
+package src.command;
 import response.LoginResponse;
 import response.Response;
 import authentication.Authenticate;

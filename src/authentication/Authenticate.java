@@ -1,4 +1,4 @@
-package authentication;
+package src.authentication;
 
 import java.util.ArrayList;
 import java.util.HashMap;

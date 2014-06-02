@@ -19,13 +19,13 @@ public class TestSearch extends Thread {
 
 	public static boolean sendSearchRequest() throws Exception {
 		Token t = dl.login();
-		String query = URLEncoder.encode("Female[Sex]", "UTF-8");
+		String query = URLEncoder.encode("Species[Fly]", "UTF-8");
 		String url = SystemTesting.server + SystemTesting.PORT
 				+ "/search/?annotations=" + query;
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("GET");
-		con.setRequestProperty("Content-Type", "application/json");
+//		con.setRequestProperty("Content-Type", "application/json");
 		con.setRequestProperty("Authorization", t.getToken());
 		int responseCode = con.getResponseCode();
 		BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -44,7 +44,7 @@ public class TestSearch extends Thread {
 		in.close();
         String response = responseBuffer.toString();
         extractUrls(paths.split("\""));
-
+        System.out.println(responseCode + " " + response);
         return responseCode == 200 && response.contains("annotations");
     }
 

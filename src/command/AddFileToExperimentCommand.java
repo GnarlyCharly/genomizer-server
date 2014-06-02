@@ -1,4 +1,4 @@
-package command;
+package src.command;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -95,7 +95,7 @@ public class AddFileToExperimentCommand extends Command {
 		}
 		try {
 			accessor = new DatabaseAccessor(DatabaseSettings.username, DatabaseSettings.password, DatabaseSettings.host, DatabaseSettings.database);
-			//response_url = accessor.addFile(type, fileName, "metadata", "Jonas Markström", "Jonas Markström", false, experimentID, "v.123");
+			//response_url = accessor.addFile(type, fileName, "metadata", "Jonas Markstrï¿½m", "Jonas Markstrï¿½m", false, experimentID, "v.123");
 			FileTuple ft = accessor.addNewFile(experimentID, filetype, fileName, "", metaData, author, uploader, false, grVersion);
 			return new AddFileToExperimentResponse(StatusCode.OK, ft.getUploadURL());
 		} catch (SQLException e) {
