@@ -141,8 +141,6 @@ function validate_path_db($file_path, $path){
 	#Close connection
 	$dbh = null;
 
-	log_var("db validate: " . $row[0] . " OR " . $row2[0] . " OR " . $row3[0] . "\n");
-
 	#Return true if the file path was found in the DB.
 	if($row[0] == $file_path){
 		return "file";
